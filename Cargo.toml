@@ -1,0 +1,12 @@
+[package]
+name = "sparsnas"
+version = "0.1.0"
+authors = ["Daniel Svensson"]
+
+[dependencies]
+cc1101 = { git = "https://github.com/dsvensson/cc1101", rev = "wip-stuff-works" }
+# cc1101 = { path = "../cc1101" }
+linux-embedded-hal = { git = "https://github.com/japaric/linux-embedded-hal" }
+
+[replace]
+"skeptic:0.13.2" = { git = 'https://github.com/budziq/rust-skeptic' }
