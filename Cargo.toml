@@ -7,6 +7,7 @@ authors = ["Daniel Svensson"]
 cc1101 = { git = "https://github.com/dsvensson/cc1101", rev = "wip-stuff-works" }
 # cc1101 = { path = "../cc1101" }
 linux-embedded-hal = { git = "https://github.com/japaric/linux-embedded-hal" }
+byteorder = "1.2.2"
 
 [replace]
 "skeptic:0.13.2" = { git = 'https://github.com/budziq/rust-skeptic' }

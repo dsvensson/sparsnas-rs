@@ -83,7 +83,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "cc1101"
 version = "0.0.1"
-source = "git+https://github.com/dsvensson/cc1101?rev=wip-stuff-works#edcd7f2524caca9fd5dd5464a529091abc39b964"
+source = "git+https://github.com/dsvensson/cc1101?rev=wip-stuff-works#6d1ebc4f7b54c0ec84aab5a44010d6b45c8f5edc"
 dependencies = [
  "embedded-hal 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -360,6 +360,7 @@ replace = "skeptic 0.13.2 (git+https://github.com/budziq/rust-skeptic)"
 name = "sparsnas"
 version = "0.1.0"
 dependencies = [
+ "byteorder 1.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "cc1101 0.0.1 (git+https://github.com/dsvensson/cc1101?rev=wip-stuff-works)",
  "linux-embedded-hal 0.1.1 (git+https://github.com/japaric/linux-embedded-hal)",
 ]
