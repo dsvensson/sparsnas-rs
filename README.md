@@ -1,12 +1,11 @@
-IKEA Sparsnäs receiver
-======================
+## IKEA Sparsnäs receiver
+
 Work in progress, should be configurable, and perhaps turned into a library and another
 application would do the actual work of storing the data in for example Influx DB. Currently
 CRC check doesn't pass in the cc1101 crate, should be fixed too. I'm fairly new with Rust,
 so all help, nags, recommendations appreciated.
 
-Screenshot
-==========
+## Screenshot
 
     $ cargo run
     Compiling sparsnas v0.1.0 (file:///home/pi/sparsnas)
@@ -17,3 +16,9 @@ Screenshot
     11 3e 3b  40de   0009693e ed3b 3009    000205e6 64 # Current power: 299
     11 3e 3c  40de   0009693e ed3c 2fd6    000205e7 64 # Current power: 301
 
+## License
+
+Licensed under your option of:
+
+* [MIT License](LICENSE-MIT)
+* [Apache License, Version 2.0](LICENSE-APACHE)
