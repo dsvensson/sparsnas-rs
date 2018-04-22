@@ -1,13 +1,14 @@
 extern crate byteorder;
 extern crate cc1101;
+extern crate hex;
 extern crate linux_embedded_hal as hal;
 
 use byteorder::{BigEndian, ReadBytesExt};
+
 use hal::spidev::SpidevOptions;
 use hal::sysfs_gpio::Direction;
 use hal::{Pin, Spidev};
 
-use std::fmt::Write;
 use std::io::{Error, Read};
 use std::{thread, time};
 
@@ -29,14 +30,6 @@ impl<'a, I: Iterator<Item = u8>> Read for IterReader<I> {
         }
         Ok(count)
     }
-}
-
-fn dump(buf: &[u8]) -> String {
-    let mut s = String::new();
-    for &byte in buf.iter() {
-        write!(&mut s, "{:02x}", byte).expect("Unable to write");
-    }
-    s
 }
 
 fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, Error> {
@@ -97,7 +90,7 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), Error> {
         "len: {:02x} addr: {:02x} data: {} len: {}, ok: {}, {:02x} {:02x}",
         len,
         addr,
-        dump(payload),
+        hex::encode(payload),
         payload.len(),
         (lqi & 0b10000000) > 0,
         rssi,
