@@ -9,28 +9,12 @@ use hal::spidev::SpidevOptions;
 use hal::sysfs_gpio::Direction;
 use hal::{Pin, Spidev};
 
-use std::io::{Error, Read};
+use std::io::Error;
 use std::{thread, time};
 
 use cc1101::{Cc1101, Modulation, PacketMode, RadioMode};
 
-struct IterReader<I: Iterator<Item = u8>>(I);
-
-impl<'a, I: Iterator<Item = u8>> Read for IterReader<I> {
-    fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
-        let mut count: usize = 0;
-        for i in 0..buf.len() {
-            match self.0.next() {
-                Some(v) => {
-                    buf[i] = v;
-                    count += 1;
-                }
-                None => break,
-            }
-        }
-        Ok(count)
-    }
-}
+mod iterreader;
 
 fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, Error> {
     let mut cc1101 = Cc1101::new(spi, cs)?;
@@ -99,7 +83,7 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), Error> {
 
     // Should fix CRC again... and probably check some package characteristics.
     if len == 0x11 && addr == 0x3e {
-        let mut dec = IterReader(
+        let mut dec = iterreader::IterReader(
             payload
                 .iter()
                 .zip([0x47, 0xd0, 0xa2, 0x73, 0x80].iter().cycle())
