@@ -13,7 +13,7 @@ use std::{thread, time};
 
 use cc1101::{Cc1101, Modulation, PacketMode, RadioMode};
 
-pub struct IterReader<I>(pub I);
+struct IterReader<I: Iterator<Item = u8>>(I);
 
 impl<'a, I: Iterator<Item = u8>> Read for IterReader<I> {
     fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
