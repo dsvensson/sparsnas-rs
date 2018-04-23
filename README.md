@@ -16,9 +16,24 @@ so all help, nags, recommendations appreciated.
     11 3e 3b  40de   0009693e ed3b 3009    000205e6 64 # Current power: 299
     11 3e 3c  40de   0009693e ed3c 2fd6    000205e7 64 # Current power: 301
 
+## Hardware
+
+A [Ti CC1101][1] (available for about 3-4 USD) connected to a Raspberry Pi:
+
+    Vdd    -    3.3V (P1-17)
+    SI     -    MOSI (P1-19)
+    SO     -    MISO (P1-21)
+    CS     -    SS   (P1-24)
+    SCLK   -    SCK  (P1-23)
+    GDO2   -    GPIO (P1-22)
+    GND    -    GND  (P1-25)
+
 ## License
 
 Licensed under your option of:
 
 * [MIT License](LICENSE-MIT)
 * [Apache License, Version 2.0](LICENSE-APACHE)
+
+
+[1]: https://web.archive.org/web/20171202153112/http://www.ti.com/product/CC1101 "Ti CC1101"
