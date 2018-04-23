@@ -2,7 +2,7 @@
 
 Work in progress, should be configurable, and perhaps turned into a library and another
 application would do the actual work of storing the data in for example Influx DB. Currently
-CRC check doesn't pass in the cc1101 crate, should be fixed too. I'm fairly new with Rust,
+CRC check doesn't pass in the [cc1101 crate][2], should be fixed too. I'm fairly new with Rust,
 so all help, nags, recommendations appreciated.
 
 ## Screenshot
@@ -37,3 +37,4 @@ Licensed under your option of:
 
 
 [1]: https://web.archive.org/web/20171202153112/http://www.ti.com/product/CC1101 "Ti CC1101"
+[2]: https://github.com/dsvensson/cc1101 "cc1101 crate"
