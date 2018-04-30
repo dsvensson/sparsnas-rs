@@ -9,14 +9,15 @@ use hal::spidev::SpidevOptions;
 use hal::sysfs_gpio::Direction;
 use hal::{Pin, Spidev};
 
-use std::io::Error;
 use std::{thread, time};
 
-use cc1101::{Cc1101, Modulation, PacketMode, RadioMode};
+use cc1101::{Cc1101, Modulation, PacketLength, RadioMode};
 
 mod iterreader;
 
-fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, Error> {
+type RadioErr = cc1101::Error<std::io::Error>;
+
+fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr> {
     let mut cc1101 = Cc1101::new(spi, cs)?;
 
     cc1101.reset().expect("Reset failed");
@@ -40,17 +41,13 @@ fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, Error> {
         .expect("Setting frequency failed");
 
     cc1101
-        .set_packet_mode(PacketMode::Fixed)
-        .expect("Setting packet mode failed");
-
-    cc1101
-        .set_packet_length(20)
+        .set_packet_length(PacketLength::Fixed(20))
         .expect("Setting packet length failed");
 
     Ok(cc1101)
 }
 
-fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), Error> {
+fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
     cc1101
         .set_radio_mode(RadioMode::Receive)
         .expect("Enabling reception failed");
@@ -106,7 +103,7 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), Error> {
     Ok(())
 }
 
-fn run() -> Result<(), Error> {
+fn run() -> Result<(), RadioErr> {
     let mut spi = Spidev::open("/dev/spidev0.0").expect("Could not open SPI device");
     let options = SpidevOptions::new().max_speed_hz(50_000).build();
     spi.configure(&options).expect("SPI configure error");
