@@ -11,7 +11,7 @@ use hal::{Pin, Spidev};
 
 use std::{thread, time};
 
-use cc1101::{Cc1101, Modulation, PacketLength, RadioMode};
+use cc1101::{AddressFilter, Cc1101, Modulation, PacketLength, RadioMode};
 
 mod iterreader;
 
@@ -43,6 +43,10 @@ fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr
     cc1101
         .set_packet_length(PacketLength::Fixed(20))
         .expect("Setting packet length failed");
+
+    cc1101
+        .set_address_filter(AddressFilter::Device(0x3e))
+        .expect("Setting address filter failed");
 
     Ok(cc1101)
 }
