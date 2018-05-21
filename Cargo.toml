@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Daniel Svensson"]
 
 [dependencies]
-cc1101 = { git = "https://github.com/dsvensson/cc1101", rev = "wip-stuff-works" }
+cc1101 = { git = "https://github.com/dsvensson/cc1101", rev = "work-in-progress" }
 # cc1101 = { path = "../cc1101" }
 linux-embedded-hal = { git = "https://github.com/japaric/linux-embedded-hal" }
 byteorder = "1.2.2"
