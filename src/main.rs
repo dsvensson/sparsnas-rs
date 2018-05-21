@@ -41,7 +41,7 @@ fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr
         .expect("Setting frequency failed");
 
     cc1101
-        .set_packet_length(PacketLength::Fixed(20))
+        .set_packet_length(PacketLength::Variable(21))
         .expect("Setting packet length failed");
 
     cc1101
