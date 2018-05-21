@@ -107,7 +107,7 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
     Ok(())
 }
 
-fn run() -> Result<(), RadioErr> {
+fn main() -> Result<(), RadioErr> {
     let mut spi = Spidev::open("/dev/spidev0.0").expect("Could not open SPI device");
     let options = SpidevOptions::new().max_speed_hz(50_000).build();
     spi.configure(&options).expect("SPI configure error");
@@ -122,8 +122,4 @@ fn run() -> Result<(), RadioErr> {
     loop {
         receive_packet(&mut cc1101)?;
     }
-}
-
-fn main() {
-    run().unwrap();
 }
