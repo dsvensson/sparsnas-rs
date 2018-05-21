@@ -28,6 +28,25 @@ A [Ti CC1101][1] (available for about 3-4 USD) connected to a Raspberry Pi:
     GDO2   -    GPIO (P1-22)
     GND    -    GND  (P1-25)
 
+## Cross compilation
+
+Compiling this on the Raspberry Pi is fairly painful. To get cross compilation going add
+the following to `~/.cargo/config`:
+
+    [target.armv7-unknown-linux-musleabihf]
+    linker = "arm-linux-gnueabihf-gcc"
+
+And install the ARM toolchain:
+
+    sudo apt-get install gcc-arm-linux-gnueabihf
+
+The development roundtrip can now be shortened by:
+
+    cargo build --target=armv7-unknown-linux-musleabihf && \
+      rsync -vPz target/armv7-unknown-linux-musleabihf/debug/sparsnas pi@raspberrypi.local:/tmp && \
+      ssh pi@raspberrypi.local "killall -9 sparsnas; /tmp/sparsnas"
+
+
 ## License
 
 Licensed under your option of:
