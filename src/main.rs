@@ -33,7 +33,7 @@ fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr
     cc1101.set_sync_mode(1).expect("Setting sync mode failed");
 
     cc1101
-        .set_modulation(Modulation::MOD_2FSK)
+        .set_modulation(Modulation::BinaryFrequencyShiftKeying)
         .expect("Setting sync mode failed");
 
     cc1101

@@ -83,7 +83,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "cc1101"
 version = "0.0.1"
-source = "git+https://github.com/dsvensson/cc1101?rev=work-in-progress#d0e8736c5c0d7b1ded6bde3c1e03a605c7970401"
+source = "git+https://github.com/dsvensson/cc1101?rev=work-in-progress#00ee9b5c28c382356cb3fa45ca7f48afddfe82ec"
 dependencies = [
  "embedded-hal 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
