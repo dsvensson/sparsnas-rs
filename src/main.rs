@@ -11,7 +11,7 @@ use hal::{Pin, Spidev};
 
 use std::{thread, time};
 
-use cc1101::{AddressFilter, Cc1101, Modulation, PacketLength, RadioMode};
+use cc1101::{AddressFilter, Cc1101, Modulation, PacketLength, RadioMode, SyncMode};
 
 mod iterreader;
 
@@ -27,10 +27,8 @@ fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr
         .expect("Setting default values failed");
 
     cc1101
-        .set_sync_word(0xD201)
+        .set_sync_mode(SyncMode::Check15of16(0xD201))
         .expect("Setting sync word failed");
-
-    cc1101.set_sync_mode(1).expect("Setting sync mode failed");
 
     cc1101
         .set_modulation(Modulation::BinaryFrequencyShiftKeying)
