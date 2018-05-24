@@ -20,37 +20,18 @@ type RadioErr = cc1101::Error<std::io::Error>;
 fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr> {
     let mut cc1101 = Cc1101::new(spi, cs)?;
 
-    cc1101
-        .set_defaults()
-        .expect("Setting default values failed");
-
-    cc1101
-        .set_sync_mode(SyncMode::Check15of16(0xD201))
-        .expect("Setting sync word failed");
-
-    cc1101
-        .set_modulation(Modulation::BinaryFrequencyShiftKeying)
-        .expect("Setting sync mode failed");
-
-    cc1101
-        .set_frequency(868_000_000u64)
-        .expect("Setting frequency failed");
-
-    cc1101
-        .set_packet_length(PacketLength::Variable(21))
-        .expect("Setting packet length failed");
-
-    cc1101
-        .set_address_filter(AddressFilter::Device(0x3e))
-        .expect("Setting address filter failed");
+    cc1101.set_defaults()?;
+    cc1101.set_frequency(868_000_000u64)?;
+    cc1101.set_modulation(Modulation::BinaryFrequencyShiftKeying)?;
+    cc1101.set_sync_mode(SyncMode::Check15of16(0xD201))?;
+    cc1101.set_packet_length(PacketLength::Variable(21))?;
+    cc1101.set_address_filter(AddressFilter::Device(0x3e))?;
 
     Ok(cc1101)
 }
 
 fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
-    cc1101
-        .set_radio_mode(RadioMode::Receive)
-        .expect("Enabling reception failed");
+    cc1101.set_radio_mode(RadioMode::Receive)?;
 
     thread::sleep(time::Duration::from_millis(10));
 
