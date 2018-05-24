@@ -20,8 +20,6 @@ type RadioErr = cc1101::Error<std::io::Error>;
 fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr> {
     let mut cc1101 = Cc1101::new(spi, cs)?;
 
-    cc1101.reset().expect("Reset failed");
-
     cc1101
         .set_defaults()
         .expect("Setting default values failed");
