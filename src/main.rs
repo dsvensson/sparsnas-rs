@@ -78,8 +78,7 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
         lqi,
     );
 
-    // Should fix CRC again... and probably check some package characteristics.
-    if len == 0x11 && addr == 0x3e {
+    if (lqi & 0b10000000) > 0 {
         let mut dec = iterreader::IterReader(
             payload
                 .iter()
