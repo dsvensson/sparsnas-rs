@@ -28,6 +28,17 @@ A [Ti CC1101][1] (available for about 3-4 USD) connected to a Raspberry Pi:
     GDO2   -    GPIO (P1-22)
     GND    -    GND  (P1-25)
 
+## Raspberry Pi Setup
+
+Update to the latest kernel via `sudo rpi-update`, and add the following SPI
+settings to `/boot/config.txt`:
+
+    dtparam=spi=on
+    dtoverlay=spi0-hw-cs
+
+The overlay is needed to get `SPI_NO_CS` working. Without this it's not possible to
+perform multiple SPI transfers within the same *chip-select*.
+
 ## Cross compilation
 
 Compiling this on the Raspberry Pi is fairly painful. To get cross compilation going add
@@ -45,7 +56,6 @@ The development roundtrip can now be shortened by:
     cargo build --target=armv7-unknown-linux-musleabihf && \
       rsync -vPz target/armv7-unknown-linux-musleabihf/debug/sparsnas pi@raspberrypi.local:/tmp && \
       ssh pi@raspberrypi.local "killall -9 sparsnas; /tmp/sparsnas"
-
 
 ## License
 
