@@ -93,7 +93,7 @@ fn main() -> Result<(), RadioErr> {
         .build();
     spi.configure(&options).expect("SPI configure error");
 
-    let cs = Pin::new(24);
+    let cs = Pin::new(8);
     cs.export().unwrap();
     while !cs.is_exported() {}
     cs.set_direction(Direction::Out).unwrap();
