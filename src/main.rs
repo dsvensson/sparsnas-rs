@@ -6,7 +6,9 @@ extern crate linux_embedded_hal as hal;
 use byteorder::{BigEndian, ReadBytesExt};
 
 use hal::spidev::SpidevOptions;
+use hal::spidev::{SPI_MODE_0, SPI_NO_CS};
 use hal::sysfs_gpio::Direction;
+
 use hal::{Pin, Spidev};
 
 use std::{thread, time};
@@ -85,7 +87,10 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
 
 fn main() -> Result<(), RadioErr> {
     let mut spi = Spidev::open("/dev/spidev0.0").expect("Could not open SPI device");
-    let options = SpidevOptions::new().max_speed_hz(50_000).build();
+    let options = SpidevOptions::new()
+        .max_speed_hz(50_000)
+        .mode(SPI_MODE_0 | SPI_NO_CS)
+        .build();
     spi.configure(&options).expect("SPI configure error");
 
     let cs = Pin::new(24);
