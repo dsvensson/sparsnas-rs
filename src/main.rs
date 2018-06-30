@@ -49,14 +49,14 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
     let length = cc1101.receive(&mut dst, &mut payload, &mut rssi, &mut lqi)?;
 
     println!(
-        "len: {:02} addr: {:02x} data: {} len: {}, ok: {}, {} dBm {:02x}",
+        "len: {:02} addr: {:02x} data: {} len: {}, ok: {}, rssi: {} dBm, lqi: {}",
         length,
         dst,
         hex::encode(payload),
         payload.len(),
         (lqi & 0b10000000) > 0,
         rssi,
-        lqi,
+        lqi & 0x7f,
     );
 
     if (lqi & 0b10000000) > 0 {
