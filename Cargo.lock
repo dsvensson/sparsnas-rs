@@ -83,6 +83,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "cc1101"
 version = "0.0.1"
+source = "git+https://github.com/dsvensson/cc1101?rev=master#d530a431da24eac2b0770ec9fa4d4e990b0d7342"
 dependencies = [
  "embedded-hal 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -344,7 +345,7 @@ name = "sparsnas"
 version = "0.1.0"
 dependencies = [
  "byteorder 1.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "cc1101 0.0.1",
+ "cc1101 0.0.1 (git+https://github.com/dsvensson/cc1101?rev=master)",
  "hex 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "linux-embedded-hal 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -442,6 +443,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum cargo_metadata 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)" = "682476b87b3e22cd3820d86b26cd8603cd84ab76dce7547b2631858347aa8967"
 "checksum cast 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "926013f2860c46252efceabb19f4a6b308197505082c609025aa6706c011d427"
 "checksum cc 1.0.17 (registry+https://github.com/rust-lang/crates.io-index)" = "49ec142f5768efb5b7622aebc3fdbdbb8950a4b9ba996393cb76ef7466e8747d"
+"checksum cc1101 0.0.1 (git+https://github.com/dsvensson/cc1101?rev=master)" = "<none>"
 "checksum cfg-if 0.1.4 (registry+https://github.com/rust-lang/crates.io-index)" = "efe5c877e17a9c717a0bf3613b2709f723202c4e4675cc8f12926ded29bcb17e"
 "checksum dtoa 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "09c3753c3db574d215cba4ea76018483895d7bff25a31b49ba45db21c48e50ab"
 "checksum embedded-hal 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "26944677e4934eb5fb4025501dc0d6cdbcf6bfabd6200fcfee2e7e8eef8c0362"
