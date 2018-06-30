@@ -25,9 +25,13 @@ fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr
     cc1101.set_defaults()?;
     cc1101.set_frequency(868_000_000u64)?;
     cc1101.set_modulation(Modulation::BinaryFrequencyShiftKeying)?;
-    cc1101.set_sync_mode(SyncMode::Check15of16(0xD201))?;
-    cc1101.set_packet_length(PacketLength::Variable(21))?;
+    cc1101.set_sync_mode(SyncMode::MatchFull(0xD201))?;
+    cc1101.set_packet_length(PacketLength::Variable(17))?;
     cc1101.set_address_filter(AddressFilter::Device(0x3e))?;
+
+    let (partnum, version) = cc1101.get_hw_info()?;
+
+    println!("partnum: {}, version: {}", partnum, version);
 
     Ok(cc1101)
 }
@@ -37,23 +41,17 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
 
     thread::sleep(time::Duration::from_millis(10));
 
-    let mut frame = [0u8; 21];
-    let mut rssi = 0u8;
+    let mut dst = 0u8;
+    let mut payload = [0u8; 17];
+    let mut rssi = 0i16;
     let mut lqi = 0u8;
 
-    cc1101.receive(&mut frame, &mut rssi, &mut lqi)?;
-
-    let buf = &frame[1..];
-    let len = buf[0];
-    let addr = buf[1];
-
-    let seq = buf[2];
-    let payload = &buf[3..18];
+    let length = cc1101.receive(&mut dst, &mut payload, &mut rssi, &mut lqi)?;
 
     println!(
-        "len: {:02x} addr: {:02x} data: {} len: {}, ok: {}, {:02x} {:02x}",
-        len,
-        addr,
+        "len: {:02} addr: {:02x} data: {} len: {}, ok: {}, {} dBm {:02x}",
+        length,
+        dst,
         hex::encode(payload),
         payload.len(),
         (lqi & 0b10000000) > 0,
@@ -63,12 +61,13 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
 
     if (lqi & 0b10000000) > 0 {
         let mut dec = iterreader::IterReader(
-            payload
+            payload[1..]
                 .iter()
                 .zip([0x47, 0xd0, 0xa2, 0x73, 0x80].iter().cycle())
                 .map(|(p, k)| p ^ k),
         );
 
+        let seq = payload[0];
         let status = dec.read_u16::<BigEndian>().unwrap();
         let fixed = dec.read_u32::<BigEndian>().unwrap();
         let pcnt = dec.read_u16::<BigEndian>().unwrap();
@@ -78,7 +77,7 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
 
         println!(
             " {:02x} {:02x} {:02x}  {:04x}   {:08x} {:04x} {:04x}    {:08x} {:02x} # Current power: {}",
-            len, addr, seq, status, fixed, pcnt, avg, count, unknown, 3686400 / avg as u32
+            length, dst, seq, status, fixed, pcnt, avg, count, unknown, 3686400 / avg as u32
         );
     }
 
