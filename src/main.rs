@@ -1,6 +1,5 @@
 extern crate byteorder;
 extern crate cc1101;
-extern crate hex;
 extern crate linux_embedded_hal as hal;
 
 use byteorder::{BigEndian, ReadBytesExt};
