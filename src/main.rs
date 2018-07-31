@@ -96,6 +96,8 @@ fn main() -> Result<(), RadioErr> {
     println!("--- -- --- ------ -----    ---- ------- -------- -- ---- ---");
 
     loop {
-        receive_packet(&mut cc1101)?;
+        if let Err(err) = receive_packet(&mut cc1101) {
+            println!("Error: {:?}", err);
+        }
     }
 }
