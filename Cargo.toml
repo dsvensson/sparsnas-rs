@@ -2,10 +2,11 @@
 name = "sparsnas"
 version = "0.1.0"
 authors = ["Daniel Svensson"]
+edition = "2018"
 
 [dependencies]
 #cc1101 = { git = "https://github.com/dsvensson/cc1101", rev = "master" }
-#cc1101 = { path = "../cc1101" }
-cc1101 = "0.0.3"
-linux-embedded-hal = "0.2.0"
+cc1101 = { path = "../cc1101" }
+#cc1101 = "0.0.3"
+linux-embedded-hal = { git = "https://github.com/rust-embedded/linux-embedded-hal", rev = "55f7f90a6ddd49fc75fcd39be3cac388b764913f" }
 byteorder = "1.2.2"

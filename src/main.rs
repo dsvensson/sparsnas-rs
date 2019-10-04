@@ -5,7 +5,7 @@ extern crate linux_embedded_hal as hal;
 use byteorder::{BigEndian, ReadBytesExt};
 
 use hal::spidev::SpidevOptions;
-use hal::spidev::{SPI_MODE_0, SPI_NO_CS};
+use hal::spidev::SpiModeFlags;
 use hal::sysfs_gpio::Direction;
 
 use hal::{Pin, Spidev};
@@ -16,7 +16,7 @@ use cc1101::{AddressFilter, Cc1101, Modulation, PacketLength, RadioMode, SyncMod
 
 mod iterreader;
 
-type RadioErr = cc1101::Error<std::io::Error>;
+type RadioErr = cc1101::Error<std::io::Error, hal::sysfs_gpio::Error>;
 
 fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr> {
     let mut cc1101 = Cc1101::new(spi, cs)?;
@@ -27,6 +27,9 @@ fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr
     cc1101.set_sync_mode(SyncMode::MatchFull(0xD201))?;
     cc1101.set_packet_length(PacketLength::Variable(17))?;
     cc1101.set_address_filter(AddressFilter::Device(0x3e))?;
+    cc1101.set_deviation(20629)?;
+    cc1101.set_data_rate(38383)?;
+    cc1101.set_chanbw(101562)?;
 
     Ok(cc1101)
 }
@@ -81,7 +84,7 @@ fn main() -> Result<(), RadioErr> {
     let mut spi = Spidev::open("/dev/spidev0.0").expect("Could not open SPI device");
     let options = SpidevOptions::new()
         .max_speed_hz(50_000)
-        .mode(SPI_MODE_0 | SPI_NO_CS)
+        .mode(SpiModeFlags::SPI_MODE_0 | SpiModeFlags::SPI_NO_CS)
         .build();
     spi.configure(&options).expect("SPI configure error");
 
