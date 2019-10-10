@@ -1,24 +1,19 @@
 extern crate byteorder;
 extern crate cc1101;
-extern crate linux_embedded_hal as hal;
 
 use byteorder::{BigEndian, ReadBytesExt};
-
-use hal::spidev::SpidevOptions;
-use hal::spidev::SpiModeFlags;
-use hal::sysfs_gpio::Direction;
-
-use hal::{Pin, Spidev};
 
 use std::{thread, time};
 
 use cc1101::{AddressFilter, Cc1101, Modulation, PacketLength, RadioMode, SyncMode};
+use rppal::spi::{Spi, Bus, SlaveSelect, Mode};
+use rppal::gpio::{Gpio, OutputPin};
 
 mod iterreader;
 
-type RadioErr = cc1101::Error<std::io::Error, hal::sysfs_gpio::Error>;
+type RadioErr = cc1101::Error<rppal::spi::Error, ()>;
 
-fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr> {
+fn configure_radio(spi: Spi, cs: OutputPin) -> Result<Cc1101<Spi, OutputPin>, RadioErr> {
     let mut cc1101 = Cc1101::new(spi, cs)?;
 
     cc1101.set_defaults()?;
@@ -34,7 +29,7 @@ fn configure_radio(spi: Spidev, cs: Pin) -> Result<Cc1101<Spidev, Pin>, RadioErr
     Ok(cc1101)
 }
 
-fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
+fn receive_packet(cc1101: &mut Cc1101<Spi, OutputPin>) -> Result<(), RadioErr> {
     cc1101.set_radio_mode(RadioMode::Receive)?;
 
     thread::sleep(time::Duration::from_millis(10));
@@ -81,17 +76,8 @@ fn receive_packet(cc1101: &mut Cc1101<Spidev, Pin>) -> Result<(), RadioErr> {
 }
 
 fn main() -> Result<(), RadioErr> {
-    let mut spi = Spidev::open("/dev/spidev0.0").expect("Could not open SPI device");
-    let options = SpidevOptions::new()
-        .max_speed_hz(50_000)
-        .mode(SpiModeFlags::SPI_MODE_0 | SpiModeFlags::SPI_NO_CS)
-        .build();
-    spi.configure(&options).expect("SPI configure error");
-
-    let cs = Pin::new(8);
-    cs.export().unwrap();
-    while !cs.is_exported() {}
-    cs.set_direction(Direction::Out).unwrap();
+    let spi = Spi::new(Bus::Spi0, SlaveSelect::Ss0, 50_000, Mode::Mode0).unwrap();
+    let cs = Gpio::new().unwrap().get(8).unwrap().into_output();
 
     let mut cc1101 = configure_radio(spi, cs)?;
 
@@ -103,4 +89,5 @@ fn main() -> Result<(), RadioErr> {
             println!("Error: {:?}", err);
         }
     }
+
 }
