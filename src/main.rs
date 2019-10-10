@@ -22,9 +22,9 @@ fn configure_radio(spi: Spi, cs: OutputPin) -> Result<Cc1101<Spi, OutputPin>, Ra
     cc1101.set_sync_mode(SyncMode::MatchFull(0xD201))?;
     cc1101.set_packet_length(PacketLength::Variable(17))?;
     cc1101.set_address_filter(AddressFilter::Device(0x3e))?;
-    cc1101.set_deviation(20629)?;
-    cc1101.set_data_rate(38383)?;
-    cc1101.set_chanbw(101562)?;
+    cc1101.set_deviation(20_629)?;
+    cc1101.set_data_rate(38_383)?;
+    cc1101.set_chanbw(101_562)?;
 
     Ok(cc1101)
 }
@@ -69,7 +69,7 @@ fn receive_packet(cc1101: &mut Cc1101<Spi, OutputPin>) -> Result<(), RadioErr> {
         unknown,
         rssi,
         lqi,
-        3686400 / avg as u32
+        3_686_400 / u32::from(avg)
     );
 
     Ok(())
